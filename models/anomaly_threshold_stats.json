@@ -1,0 +1,8 @@
+{
+  "normal_threshold": 0.5453,
+  "abnormal_threshold": 0.5454,
+  "normal_mean": 0.5454,
+  "abnormal_mean": 0.5454,
+  "normal_std": 0.0,
+  "abnormal_std": 0.0
+}
