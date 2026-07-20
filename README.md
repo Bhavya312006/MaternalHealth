@@ -193,6 +193,6 @@ D:\maternal_project\models\
 ---
 
 ## Team
-- Bhavya (1BG23CS0XX)
+- Bhavya (1BG23CS086)
 - Dept. of CSE, BNMIT, Bengaluru
-- VTU, 2025-26
+
