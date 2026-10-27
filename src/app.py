@@ -57,8 +57,8 @@ def load_models():
 
     fusion = joblib.load(FUSION_MODEL)
     scaler = joblib.load(SCALER)
-    clf = load_model(CLF_MODEL)
-    ano = load_model(ANO_MODEL)
+    clf = load_model(CLF_MODEL, compile=False)
+    ano = load_model(ANO_MODEL, compile=False)
 
     with open(CLASSES_JSON, "r") as f:
         classes = json.load(f)
