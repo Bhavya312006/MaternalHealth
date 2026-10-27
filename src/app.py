@@ -16,26 +16,58 @@ from utils_preprocess import preprocess_batch
 # ══════════════════════════════════════════════════════════
 #  MODEL PATHS — full absolute paths
 # ══════════════════════════════════════════════════════════
-FUSION_MODEL = r"C:\MATERNAL_FINAL\models\fusion_maternal_model.pkl"
-SCALER       = r"C:\MATERNAL_FINAL\models\fusion_scaler.pkl"
-CLF_MODEL    = r"C:\MATERNAL_FINAL\models\fetal_classification_model.h5"
-ANO_MODEL    = r"C:\MATERNAL_FINAL\models\fetal_anomaly_model.keras"
-CLASSES_JSON = r"C:\MATERNAL_FINAL\models\fetal_classification_model_classes.json"
+# MODEL PATHS — Streamlit Cloud compatible
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+MODELS_DIR = BASE_DIR / "models"
+
+FUSION_MODEL = MODELS_DIR / "fusion_maternal_model.pkl"
+SCALER       = MODELS_DIR / "fusion_scaler.pkl"
+CLF_MODEL    = MODELS_DIR / "fetal_classification_model.h5"
+ANO_MODEL    = MODELS_DIR / "fetal_anomaly_model.keras"
+CLASSES_JSON = MODELS_DIR / "fetal_classification_model_classes.json"
 
 # ══════════════════════════════════════════════════════════
 #  Load Models
 # ══════════════════════════════════════════════════════════
 @st.cache_resource
+# Load Models
+@st.cache_resource
 def load_models():
+    # Check that all required model files exist
+    required_files = [
+        FUSION_MODEL,
+        SCALER,
+        CLF_MODEL,
+        ANO_MODEL,
+        CLASSES_JSON
+    ]
+
+    missing_files = [
+        str(file) for file in required_files
+        if not file.exists()
+    ]
+
+    if missing_files:
+        st.error("The following model files are missing:")
+        for file in missing_files:
+            st.write(file)
+        st.stop()
+
     fusion = joblib.load(FUSION_MODEL)
     scaler = joblib.load(SCALER)
-    clf    = load_model(CLF_MODEL)
-    ano    = load_model(ANO_MODEL)
-    with open(CLASSES_JSON) as f:
+    clf = load_model(CLF_MODEL)
+    ano = load_model(ANO_MODEL)
+
+    with open(CLASSES_JSON, "r") as f:
         classes = json.load(f)
+
     return fusion, scaler, clf, ano, classes
 
+
 fusion_model, scaler, clf_model, ano_model, class_indices = load_models()
+
 idx_to_class = {v: k for k, v in class_indices.items()}
 
 # ══════════════════════════════════════════════════════════
